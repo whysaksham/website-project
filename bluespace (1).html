@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bluespace — Reddit Growth for B2B & B2C SaaS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#111111;--paper:#E8E4DD;--offwhite:#F5F3EE;--signal:#E63B2E;--slate:#2A2A2A;--muted:#888}
+html{scroll-behavior:smooth}
+body{background:var(--offwhite);color:var(--ink);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.04}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--signal)}
+a{text-decoration:none;color:inherit}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;background:var(--signal);padding:7px 0;position:fixed;top:0;left:0;right:0;z-index:300}
+.ticker-track{display:flex;width:max-content;animation:ticker 32s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-family:'Space Mono',monospace;font-size:11px;color:#fff;letter-spacing:.15em;white-space:nowrap;padding:0 28px}
+
+/* NAV */
+#nav{position:fixed;top:40px;left:50%;transform:translateX(-50%);z-index:200;
+  transition:all .5s cubic-bezier(.25,.46,.45,.94);
+  display:flex;align-items:center;gap:32px;padding:12px 24px;border-radius:9999px;min-width:min(700px,92vw)}
+#nav.scrolled{background:rgba(245,243,238,.88);backdrop-filter:blur(20px);border:1px solid var(--paper);box-shadow:0 8px 32px rgba(0,0,0,.08)}
+.nav-logo{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.15em;flex-shrink:0}
+.nav-logo span{color:var(--signal)}
+.nav-links{display:flex;gap:22px;flex:1;justify-content:center}
+.nav-links a{font-size:13px;font-weight:500;color:var(--slate);transition:color .2s,transform .2s}
+.nav-links a:hover{color:var(--signal);transform:translateY(-1px)}
+.nav-cta{display:inline-flex;align-items:center;gap:6px;background:var(--signal);color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;padding:9px 20px;border-radius:9999px;flex-shrink:0;
+  transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s}
+.nav-cta:hover{transform:scale(1.03) translateY(-1px);box-shadow:0 8px 24px rgba(230,59,46,.35)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* HERO */
+#hero{position:relative;min-height:100dvh;display:flex;align-items:flex-end;padding-bottom:80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#111 0%,rgba(17,17,17,.85) 35%,rgba(17,17,17,.35) 70%,transparent 100%)}
+.hero-content{position:relative;z-index:10;max-width:1280px;margin:0 auto;padding:0 48px;width:100%}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:.3em;margin-bottom:24px;opacity:0;animation:fadeUp .8s .1s cubic-bezier(.25,.46,.45,.94) forwards}
+.hero-l1{display:block;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#F5F3EE;font-size:clamp(26px,4.2vw,54px);line-height:1.1;letter-spacing:-.02em;opacity:0;animation:fadeUp .8s .22s cubic-bezier(.25,.46,.45,.94) forwards}
+.hero-l2{display:block;font-family:'DM Serif Display',serif;font-style:italic;color:#fff;font-size:clamp(52px,9.5vw,124px);line-height:.92;opacity:0;animation:fadeUp .9s .38s cubic-bezier(.25,.46,.45,.94) forwards}
+.hero-sub{font-size:clamp(15px,1.3vw,18px);color:rgba(245,243,238,.62);max-width:500px;line-height:1.65;margin:28px 0 40px;opacity:0;animation:fadeUp .8s .52s cubic-bezier(.25,.46,.45,.94) forwards}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px;opacity:0;animation:fadeUp .8s .66s cubic-bezier(.25,.46,.45,.94) forwards}
+.btn-signal{display:inline-flex;align-items:center;gap:8px;background:var(--signal);color:#fff;font-weight:700;font-size:15px;padding:16px 32px;border-radius:9999px;transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s}
+.btn-signal:hover{transform:scale(1.03) translateY(-2px);box-shadow:0 12px 40px rgba(230,59,46,.38)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);color:#fff;font-weight:600;font-size:15px;padding:16px 32px;border-radius:9999px;border:1px solid rgba(255,255,255,.2);transition:background .2s,transform .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,auto);gap:40px;margin-top:56px;opacity:0;animation:fadeUp .8s .82s cubic-bezier(.25,.46,.45,.94) forwards}
+.stat-val{font-family:'Space Mono',monospace;font-size:clamp(22px,2.8vw,34px);font-weight:700;color:#fff}
+.stat-label{font-size:12px;color:rgba(245,243,238,.42);letter-spacing:.05em;margin-top:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:translateY(0)}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}
+
+/* SECTIONS */
+section{padding:100px 48px}
+.sec-inner{max-width:1280px;margin:0 auto}
+.sec-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:.3em;margin-bottom:16px}
+.sec-h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(30px,4.2vw,56px);line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
+.sec-h2 em{font-family:'DM Serif Display',serif;font-style:italic;font-weight:400}
+.sec-sub{font-size:16px;color:var(--muted);max-width:420px;line-height:1.6}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px}
+@media(max-width:900px){.features-grid{grid-template-columns:1fr}}
+.fcard{border-radius:32px;padding:36px;min-height:340px;transition:transform .35s cubic-bezier(.25,.46,.45,.94),box-shadow .35s}
+.fcard:hover{transform:translateY(-6px);box-shadow:0 28px 72px rgba(0,0,0,.1)}
+.fcard-light{background:var(--offwhite);border:1px solid var(--paper)}
+.fcard-dark{background:var(--ink)}
+.fcard-tag{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.fcard-tag-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted)}
+.fcard h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.fcard-dark h3{color:var(--offwhite)}
+.fcard p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.cursor{animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.shuffler{position:relative;height:110px}
+.shuffle-card{position:absolute;left:0;right:0;border-radius:18px;padding:14px 18px;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+.day-cell{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;background:var(--paper);color:var(--muted);transition:all .3s}
+.day-cell.active{background:var(--signal);color:#fff;transform:scale(.9)}
+.sched-item{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sched-dot{width:5px;height:5px;border-radius:50%;background:var(--signal);flex-shrink:0}
+
+/* HOW IT WORKS — 6 STEPS */
+#how{background:var(--ink);border-radius:48px;margin:0 16px;padding:100px 64px}
+.how-inner{max-width:1100px;margin:0 auto}
+.steps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:56px}
+@media(max-width:760px){.steps-grid{grid-template-columns:1fr}}
+.step-card{border-radius:24px;padding:36px;border:1px solid rgba(245,243,238,.08);background:rgba(255,255,255,.03);transition:border-color .3s,transform .3s}
+.step-card:hover{border-color:rgba(230,59,46,.35);transform:translateY(-3px)}
+.step-num{font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--signal);margin-bottom:16px;line-height:1}
+.step-title{font-weight:700;font-size:17px;color:var(--offwhite);margin-bottom:10px}
+.step-body{font-size:14px;color:rgba(245,243,238,.5);line-height:1.7}
+
+/* PHILOSOPHY */
+#philosophy{background:var(--ink);border-radius:48px;margin:32px 16px;padding:100px 64px;position:relative;overflow:hidden}
+.phil-bg{position:absolute;inset:0;opacity:.08}
+.phil-bg img{width:100%;height:100%;object-fit:cover}
+.phil-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.phil-neutral{font-size:clamp(17px,1.8vw,24px);color:rgba(245,243,238,.42);line-height:1.65;margin-bottom:24px}
+.phil-strong{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,3.8vw,50px);color:var(--offwhite);line-height:1.2}
+.phil-strong em{font-family:'DM Serif Display',serif;font-style:italic;font-weight:400;color:var(--signal)}
+.phil-body{font-size:16px;color:rgba(245,243,238,.5);max-width:600px;line-height:1.7;margin-top:32px}
+.phil-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:64px;border-top:1px solid rgba(245,243,238,.1);padding-top:48px}
+.phil-stat-val{font-family:'Space Mono',monospace;font-size:clamp(34px,4vw,50px);font-weight:700;color:var(--signal);margin-bottom:8px}
+.phil-stat-label{font-size:13px;color:rgba(245,243,238,.38);line-height:1.5;padding-right:32px}
+
+/* PROTOCOL */
+.protocol-list{display:flex;flex-direction:column;gap:24px;margin-top:64px}
+.proto-card{border-radius:40px;padding:56px 64px;display:grid;grid-template-columns:1fr 180px;gap:48px;align-items:center;transition:transform .35s,box-shadow .35s}
+.proto-card:hover{transform:translateY(-4px);box-shadow:0 24px 64px rgba(0,0,0,.09)}
+.proto-card.cl{background:var(--offwhite);border:1px solid var(--paper)}
+.proto-card.cm{background:var(--paper)}
+.proto-card.cd{background:var(--ink)}
+.proto-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--muted);margin-bottom:20px}
+.proto-card.cd .proto-num{color:var(--signal)}
+.proto-title{font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.2;margin-bottom:14px}
+.proto-card.cd .proto-title{color:var(--offwhite)}
+.proto-desc{font-size:14px;line-height:1.7;color:var(--muted);max-width:480px}
+@keyframes rotSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes rotRev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+.geo-r1{animation:rotSlow 25s linear infinite;transform-origin:100px 100px}
+.geo-r2{animation:rotRev 18s linear infinite;transform-origin:100px 100px}
+@keyframes scanMove{0%{transform:translateX(-60px)}100%{transform:translateX(220px)}}
+.scan-beam{animation:scanMove 2.4s linear infinite}
+@keyframes ekgDash{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
+.ekg-path{stroke-dasharray:900;animation:ekgDash 3s linear infinite}
+@media(max-width:780px){.proto-card{grid-template-columns:1fr;padding:40px}}
+
+/* ROI CALCULATOR */
+#roi{background:var(--offwhite);padding:100px 48px}
+.roi-wrap{max-width:1100px;margin:0 auto}
+.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:56px}
+@media(max-width:800px){.roi-grid{grid-template-columns:1fr}}
+.roi-controls{display:flex;flex-direction:column;gap:20px}
+.roi-slider-group{background:var(--offwhite);border:1px solid var(--paper);border-radius:20px;padding:24px}
+.roi-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.roi-slider-name{font-size:13px;font-weight:600;color:var(--slate)}
+.roi-slider-val{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--signal)}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--paper);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--signal);cursor:pointer;transition:transform .2s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.roi-output{background:var(--ink);border-radius:32px;padding:40px;display:flex;flex-direction:column;gap:20px}
+.roi-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(245,243,238,.08)}
+.roi-row:last-child{border-bottom:none;padding-bottom:0}
+.roi-row-label{font-size:13px;color:rgba(245,243,238,.45)}
+.roi-row-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--offwhite)}
+.roi-row-val.accent{color:var(--signal)}
+.roi-multiplier{text-align:center;margin-top:8px;padding-top:24px;border-top:1px solid rgba(230,59,46,.3)}
+.roi-multiplier-val{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--signal);line-height:1}
+.roi-multiplier-label{font-size:13px;color:rgba(245,243,238,.4);margin-top:6px}
+.roi-examples{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+@media(max-width:600px){.roi-examples{grid-template-columns:1fr}}
+.roi-eg{border:1px solid var(--paper);border-radius:20px;padding:24px;background:var(--offwhite)}
+.roi-eg-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--signal);margin-bottom:12px}
+.roi-eg-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.roi-eg-row b{color:var(--slate);font-weight:600}
+.roi-eg-result{margin-top:12px;padding-top:12px;border-top:1px solid var(--paper);font-weight:700;font-size:14px;color:var(--ink)}
+.roi-eg-return{font-family:'Space Mono',monospace;font-size:11px;color:var(--signal);margin-top:4px}
+
+/* CASE STUDY */
+#clients{background:var(--ink);border-radius:48px;margin:32px 16px;padding:100px 64px}
+.case-inner{max-width:1100px;margin:0 auto}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
+@media(max-width:700px){.metrics-grid{grid-template-columns:repeat(2,1fr)}}
+.metric-box{padding:28px 24px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
+.metric-val{font-family:'Space Mono',monospace;font-size:clamp(24px,2.8vw,36px);font-weight:700;color:var(--signal);margin-bottom:6px}
+.metric-label{font-size:12px;color:rgba(245,243,238,.32);letter-spacing:.05em}
+.case-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.case-cols{grid-template-columns:1fr}}
+.case-col-l{padding:36px;border-radius:24px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03)}
+.case-col-r{padding:36px;border-radius:24px;background:var(--signal)}
+.case-col-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;margin-bottom:20px;color:rgba(245,243,238,.45)}
+.case-col-r .case-col-tag{color:rgba(255,255,255,.55)}
+.check-row{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.check-icon{color:var(--signal);flex-shrink:0;margin-top:1px;font-weight:700}
+.check-text{font-size:14px;color:rgba(245,243,238,.62);line-height:1.5}
+.quote-text{font-weight:700;font-size:clamp(16px,1.7vw,21px);color:#fff;line-height:1.4;margin-bottom:20px}
+.quote-body{font-size:14px;color:rgba(255,255,255,.62);line-height:1.65}
+.quote-footer{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.18);font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.1em}
+
+/* PRICING */
+#pricing{background:var(--offwhite)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr}}
+.price-card{border-radius:32px;padding:40px;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.25,.46,.45,.94)}
+.price-card:hover{transform:translateY(-5px)}
+.price-base{background:var(--offwhite);border:1px solid var(--paper)}
+.price-featured{background:var(--ink);transform:scale(1.02);border:2px solid var(--signal)}
+.price-featured:hover{transform:scale(1.02) translateY(-5px)}
+.price-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;margin-bottom:20px;color:var(--muted)}
+.price-featured .price-badge{color:var(--signal)}
+.price-name{font-weight:700;font-size:22px;margin-bottom:10px}
+.price-featured .price-name,.price-featured .price-amt{color:var(--offwhite)}
+.price-amt{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;margin-bottom:4px}
+.price-per{font-size:13px;color:var(--muted)}
+.price-featured .price-per{color:rgba(245,243,238,.38)}
+.price-desc{font-size:13px;color:var(--muted);line-height:1.6;margin:20px 0 24px;padding-top:20px;border-top:1px solid var(--paper)}
+.price-featured .price-desc{color:rgba(245,243,238,.38);border-top-color:rgba(245,243,238,.1)}
+.price-guarantee{display:inline-flex;align-items:center;gap:6px;background:rgba(230,59,46,.1);border:1px solid rgba(230,59,46,.25);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:700;color:var(--signal);margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:.05em}
+.price-features{flex:1;margin-bottom:32px}
+.pf-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.pf-dot{width:5px;height:5px;border-radius:50%;background:var(--signal);flex-shrink:0;margin-top:6px}
+.pf-text{font-size:13px;color:var(--slate);line-height:1.5}
+.price-featured .pf-text{color:rgba(245,243,238,.68)}
+.price-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px;padding:14px 24px;border-radius:9999px;width:100%;transition:transform .25s,box-shadow .25s}
+.price-cta:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.15)}
+.price-cta.dark{background:var(--ink);color:var(--offwhite)}
+.price-cta.accent{background:var(--signal);color:#fff}
+.price-cta.border{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+
+/* BOOKING */
+#booking{background:var(--ink);border-radius:48px;margin:32px 16px;padding:100px 64px}
+.booking-inner{max-width:1000px;margin:0 auto}
+.calendly-frame{border-radius:24px;overflow:hidden;margin-top:40px;background:#fff}
+
+/* FOOTER */
+#footer{background:var(--ink);border-radius:48px 48px 0 0;margin:0 8px;padding:80px 64px 48px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:64px}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}}
+.footer-logo{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--offwhite);margin-bottom:16px}
+.footer-logo span{color:var(--signal)}
+.footer-tagline{font-size:14px;color:rgba(245,243,238,.38);line-height:1.6;max-width:280px;margin-bottom:28px}
+.status-row{display:flex;align-items:center;gap:8px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 1.8s ease-in-out infinite}
+.status-label{font-family:'Space Mono',monospace;font-size:11px;color:rgba(245,243,238,.3);letter-spacing:.1em}
+.footer-col-head{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:rgba(245,243,238,.22);margin-bottom:20px}
+.footer-links a{display:block;font-size:14px;color:rgba(245,243,238,.45);margin-bottom:12px;transition:color .2s,transform .2s}
+.footer-links a:hover{color:var(--signal);transform:translateX(3px)}
+.footer-bottom{padding-top:28px;border-top:1px solid rgba(245,243,238,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-copy{font-family:'Space Mono',monospace;font-size:11px;color:rgba(245,243,238,.22);letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">BLUE<span>SPACE</span></div>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#roi">ROI</a>
+    <a href="#clients">Case Study</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#booking">Book a Call</a>
+  </div>
+  <a href="#booking" class="nav-cta">Book Free Call ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1800&q=80" alt=""/>
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-tag">REDDIT GROWTH · B2B &amp; B2C SAAS · ZERO AD SPEND</p>
+    <h1>
+      <span class="hero-l1">Create buzz, drive attention, and</span>
+      <span class="hero-l2" style="font-family:'DM Serif Display',serif;font-style:italic">pull high-intent traffic.</span>
+    </h1>
+    <p class="hero-sub">Bluespace builds Reddit organic growth campaigns for B2B and B2C SaaS teams — generating real conversations, qualified signups, and compounding brand presence without a single dollar in ad spend.</p>
+    <div class="hero-btns">
+      <a href="#booking" class="btn-signal">Book a Free Strategy Call ↗</a>
+      <a href="#roi" class="btn-ghost">See ROI Calculator →</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-val" style="font-family:'Space Mono',monospace">300K+</div><div class="stat-label">Organic impressions</div></div>
+      <div><div class="stat-val" style="font-family:'Space Mono',monospace">100K+</div><div class="stat-label">Traffic delivered</div></div>
+      <div><div class="stat-val" style="font-family:'Space Mono',monospace">14d</div><div class="stat-label">To first results</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="process" style="background:var(--offwhite)">
+<div class="sec-inner">
+  <div class="sec-tag reveal">WHAT WE DO</div>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:48px">
+    <h2 class="sec-h2 reveal d1">A campaign system<br><em>built to convert.</em></h2>
+    <p class="sec-sub reveal d2">Three interlocking mechanisms that move your SaaS from unknown to everywhere your buyers look.</p>
+  </div>
+  <div class="features-grid">
+    <div class="fcard fcard-light reveal d1">
+      <div class="fcard-tag">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="var(--signal)" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="var(--signal)"/></svg>
+        <span class="fcard-tag-label" style="font-family:'Space Mono',monospace">CAMPAIGN TYPES</span>
+      </div>
+      <h3>ICP-Mapped Subreddit Targeting</h3>
+      <p>We map high-intent subreddits where your exact buyers already hang out — based on your product and ICP — before writing a single word.</p>
+      <div class="shuffler" id="shuffler"></div>
+    </div>
+    <div class="fcard fcard-dark reveal d2">
+      <div class="fcard-tag">
+        <div class="live-dot"></div>
+        <span class="fcard-tag-label" style="font-family:'Space Mono',monospace;color:#555">LIVE FEED</span>
+      </div>
+      <h3 style="color:var(--offwhite)">Real-Time Campaign Intel</h3>
+      <p>Live signals from your active campaigns. Thread visibility, comment engagement, subreddit moderation status — all tracked weekly.</p>
+      <div id="tw-log" style="font-family:'Space Mono',monospace;font-size:11px;line-height:1.8">
+        <div id="tw-cur" style="color:var(--signal)"><span class="cursor" style="color:var(--signal)">█</span></div>
+      </div>
+    </div>
+    <div class="fcard fcard-light reveal d3">
+      <div class="fcard-tag">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="11" rx="2" stroke="var(--signal)" stroke-width="1.5"/><path d="M5 1v3M11 1v3M1 7h14" stroke="var(--signal)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="fcard-tag-label" style="font-family:'Space Mono',monospace">CAMPAIGN CADENCE</span>
+      </div>
+      <h3>Weekly Execution Protocol</h3>
+      <p>Every post, comment, and thread timed to peak subreddit activity windows. Consistent volume without triggering spam filters.</p>
+      <div class="week-grid" id="week-grid">
+        <div class="day-cell" data-d="0">S</div><div class="day-cell" data-d="1">M</div><div class="day-cell" data-d="2">T</div><div class="day-cell" data-d="3">W</div><div class="day-cell" data-d="4">T</div><div class="day-cell" data-d="5">F</div><div class="day-cell" data-d="6">S</div>
+      </div>
+      <div>
+        <div class="sched-item"><div class="sched-dot"></div><span style="font-size:12px;color:var(--slate)">Thread seeding</span></div>
+        <div class="sched-item"><div class="sched-dot"></div><span style="font-size:12px;color:var(--slate)">Comment replies &amp; engagement</span></div>
+        <div class="sched-item"><div class="sched-dot"></div><span style="font-size:12px;color:var(--slate)">Moderation management</span></div>
+        <div class="sched-item"><div class="sched-dot"></div><span style="font-size:12px;color:var(--slate)">Trend monitoring</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- HOW IT WORKS — 6 STEPS -->
+<section id="how" style="background:var(--ink);border-radius:48px;margin:0 16px;padding:100px 64px">
+<div class="how-inner">
+  <div class="sec-tag reveal" style="color:var(--signal)">THE PLAYBOOK</div>
+  <h2 class="sec-h2 reveal d1" style="color:var(--offwhite)">How we turn Reddit<br><em style="font-family:'DM Serif Display',serif;font-weight:400;font-style:italic;color:var(--signal)">into a growth channel.</em></h2>
+  <p class="sec-sub reveal d2" style="color:rgba(245,243,238,.45);margin-top:12px">Six steps. Fully managed. Built to drive pre-qualified traffic into paying users.</p>
+  <div class="steps-grid">
+    <div class="step-card reveal d1">
+      <div class="step-num">01</div>
+      <div class="step-title">Subreddit Mapping</div>
+      <div class="step-body">We identify high-intent subreddits where your target users already hang out — mapped specifically to your product and ICP. No guesswork, no spray-and-pray.</div>
+    </div>
+    <div class="step-card reveal d2">
+      <div class="step-num">02</div>
+      <div class="step-title">Content That Doesn't Feel Like Marketing</div>
+      <div class="step-body">We create posts that read like founder stories, problem-led discussions, or genuine insights — content that naturally ties back to your product without triggering ad-blindness.</div>
+    </div>
+    <div class="step-card reveal d3">
+      <div class="step-num">03</div>
+      <div class="step-title">Consistent Posting &amp; Moderation Management</div>
+      <div class="step-body">We post consistently, follow subreddit rules, manage moderation proactively, and keep everything looking organic. No bans. No shadowbans. No ToS violations.</div>
+    </div>
+    <div class="step-card reveal d1">
+      <div class="step-num">04</div>
+      <div class="step-title">Active Comment Engagement</div>
+      <div class="step-body">After posting, we actively engage in comments and related threads — driving visibility, guiding conversations toward your product, and building community credibility.</div>
+    </div>
+    <div class="step-card reveal d2">
+      <div class="step-num">05</div>
+      <div class="step-title">Early Traction Engineering</div>
+      <div class="step-body">We use strategic account management to give posts early momentum — so they don't die at zero. Visibility in the first hour determines whether a post reaches thousands or nobody.</div>
+    </div>
+    <div class="step-card reveal d3">
+      <div class="step-num">06</div>
+      <div class="step-title">Pre-Qualified Traffic → Signups → Paid</div>
+      <div class="step-body">The end goal is always conversion: drive pre-qualified visitors to your site, into free signups, and through to paid users. Reddit intent converts because it's self-selected.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy" style="padding:100px 0;background:transparent">
+<div style="background:var(--ink);border-radius:48px;margin:0 16px;padding:100px 64px;position:relative;overflow:hidden">
+  <div class="phil-bg"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=60" alt=""/></div>
+  <div class="phil-inner">
+    <div class="sec-tag reveal" style="color:var(--signal)">OUR PHILOSOPHY</div>
+    <p class="phil-neutral reveal d1">Most growth agencies focus on paid ads, vanity metrics, follower counts, and surface-level awareness that disappears the moment budgets are cut.</p>
+    <p class="phil-strong reveal d2">We focus on: the exact moment a buyer types into Reddit, <em>"has anyone actually used this tool?"</em></p>
+    <p class="phil-body reveal d3">Reddit is the only platform where purchase intent is explicit, peer-validated, and indexed by Google. We own those conversations before your competitor knows they exist — and the results compound month over month.</p>
+    <div class="phil-stats reveal d3">
+      <div class="phil-stat" style="padding-right:40px"><div class="phil-stat-val" style="font-family:'Space Mono',monospace">300K+</div><div class="phil-stat-label">Organic impressions delivered across campaigns. No paid amplification.</div></div>
+      <div class="phil-stat" style="padding-right:40px"><div class="phil-stat-val" style="font-family:'Space Mono',monospace">100K+</div><div class="phil-stat-label">Organic website traffic delivered to client properties through Reddit alone.</div></div>
+      <div class="phil-stat"><div class="phil-stat-val" style="font-family:'Space Mono',monospace">14d</div><div class="phil-stat-label">To first measurable results. Most campaigns show real traction in two weeks.</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PROTOCOL -->
+<section id="results" style="background:var(--offwhite)">
+<div class="sec-inner">
+  <div class="sec-tag reveal">THE PROTOCOL</div>
+  <h2 class="sec-h2 reveal d1">Three phases.<br><em>One compounding system.</em></h2>
+  <div class="protocol-list">
+    <div class="proto-card cl reveal d1">
+      <div>
+        <div class="proto-num" style="font-family:'Space Mono',monospace">01</div>
+        <h3 class="proto-title">Subreddit Mapping &amp; ICP Intelligence</h3>
+        <p class="proto-desc">We build a full conversation map of your category — every subreddit, thread type, and buyer question pattern — before a single post goes live. Research before reach.</p>
+      </div>
+      <svg viewBox="0 0 200 200" fill="none" width="180" height="180" style="flex-shrink:0">
+        <g class="geo-r1"><circle cx="100" cy="100" r="72" stroke="var(--signal)" stroke-width="1" stroke-dasharray="8 4"/><circle cx="100" cy="100" r="52" stroke="var(--signal)" stroke-width=".5" stroke-dasharray="4 8"/></g>
+        <g class="geo-r2"><circle cx="100" cy="100" r="88" stroke="var(--paper)" stroke-width=".5" stroke-dasharray="2 10"/><circle cx="172" cy="100" r="4" fill="var(--signal)"/><circle cx="28" cy="100" r="4" fill="var(--signal)"/><circle cx="100" cy="172" r="4" fill="var(--signal)"/><circle cx="100" cy="28" r="4" fill="var(--signal)"/></g>
+        <circle cx="100" cy="100" r="9" fill="var(--signal)"/><circle cx="100" cy="100" r="22" stroke="var(--signal)" stroke-width=".5"/>
+      </svg>
+    </div>
+    <div class="proto-card cm reveal d2">
+      <div>
+        <div class="proto-num" style="font-family:'Space Mono',monospace">02</div>
+        <h3 class="proto-title">Campaign Execution &amp; Thread Seeding</h3>
+        <p class="proto-desc">Our team deploys founder-voice posts, value-first comments, and contextual brand mentions that read like community — not advertising. Zero bots. Zero spam.</p>
+      </div>
+      <svg viewBox="0 0 200 200" fill="none" width="180" height="180" style="flex-shrink:0">
+        <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="var(--signal)" stop-opacity="0"/><stop offset="50%" stop-color="var(--signal)" stop-opacity=".55"/><stop offset="100%" stop-color="var(--signal)" stop-opacity="0"/></linearGradient></defs>
+        <g id="scan-dots"></g>
+        <rect class="scan-beam" x="0" y="0" width="40" height="200" fill="url(#sg)"/>
+      </svg>
+    </div>
+    <div class="proto-card cd reveal d3">
+      <div>
+        <div class="proto-num" style="font-family:'Space Mono',monospace;color:var(--signal)">03</div>
+        <h3 class="proto-title" style="color:var(--offwhite)">Reporting, Iteration &amp; Compounding Reach</h3>
+        <p class="proto-desc" style="color:rgba(245,243,238,.45)">Weekly reports with impression counts, sentiment analysis, traffic attribution, and keyword velocity. Every cycle compounds — your Reddit presence becomes an asset that outlasts any campaign.</p>
+      </div>
+      <svg viewBox="0 0 260 120" fill="none" width="180" style="flex-shrink:0">
+        <line x1="0" y1="60" x2="260" y2="60" stroke="rgba(245,243,238,.1)" stroke-width=".5"/>
+        <path class="ekg-path" d="M0 60 L26 60 L38 16 L50 104 L62 60 L84 60 L94 36 L106 84 L118 60 L140 60 L152 8 L164 112 L176 60 L198 60 L210 40 L222 80 L234 60 L260 60" stroke="var(--signal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section id="roi" style="background:var(--offwhite);padding:100px 48px">
+<div class="sec-inner roi-wrap">
+  <div class="sec-tag reveal">ROI CALCULATOR</div>
+  <h2 class="sec-h2 reveal d1">What does Reddit traffic<br><em>actually return?</em></h2>
+  <p class="sec-sub reveal d2" style="margin-top:12px">Model your potential return based on real campaign benchmarks. Move the sliders to fit your SaaS numbers.</p>
+
+  <div class="roi-grid reveal d2">
+    <div class="roi-controls">
+      <div class="roi-slider-group">
+        <div class="roi-slider-label"><span class="roi-slider-name">Monthly Visitors from Reddit</span><span class="roi-slider-val" id="v-visitors">15,000</span></div>
+        <input type="range" min="1000" max="50000" step="500" value="15000" id="sl-visitors" oninput="calcROI()"/>
+      </div>
+      <div class="roi-slider-group">
+        <div class="roi-slider-label"><span class="roi-slider-name">Signup Conversion Rate</span><span class="roi-slider-val" id="v-signup">3%</span></div>
+        <input type="range" min="1" max="10" step="0.5" value="3" id="sl-signup" oninput="calcROI()"/>
+      </div>
+      <div class="roi-slider-group">
+        <div class="roi-slider-label"><span class="roi-slider-name">Free → Paid Conversion</span><span class="roi-slider-val" id="v-paid">5%</span></div>
+        <input type="range" min="1" max="15" step="0.5" value="5" id="sl-paid" oninput="calcROI()"/>
+      </div>
+      <div class="roi-slider-group">
+        <div class="roi-slider-label"><span class="roi-slider-name">Monthly Revenue per Customer</span><span class="roi-slider-val" id="v-rev">$30</span></div>
+        <input type="range" min="10" max="200" step="5" value="30" id="sl-rev" oninput="calcROI()"/>
+      </div>
+      <div class="roi-slider-group">
+        <div class="roi-slider-label"><span class="roi-slider-name">Campaign Cost / Month</span><span class="roi-slider-val" id="v-cost">$800</span></div>
+        <input type="range" min="800" max="2000" step="700" value="800" id="sl-cost" oninput="calcROI()"/>
+      </div>
+    </div>
+    <div>
+      <div class="roi-output">
+        <div class="roi-row"><span class="roi-row-label">Monthly signups</span><span class="roi-row-val" id="o-signups">450</span></div>
+        <div class="roi-row"><span class="roi-row-label">Paying customers</span><span class="roi-row-val" id="o-customers">22</span></div>
+        <div class="roi-row"><span class="roi-row-label">MRR generated</span><span class="roi-row-val accent" id="o-mrr">$660</span></div>
+        <div class="roi-row"><span class="roi-row-label">3-month value</span><span class="roi-row-val accent" id="o-3mo">$1,980</span></div>
+        <div class="roi-row"><span class="roi-row-label">Campaign cost (3mo)</span><span class="roi-row-val" id="o-cost3">$2,400</span></div>
+        <div class="roi-multiplier">
+          <div class="roi-multiplier-val" id="o-mult">2.5×</div>
+          <div class="roi-multiplier-label">Return on campaign spend</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Static examples -->
+  <h3 class="reveal" style="font-size:18px;font-weight:700;margin-top:64px;margin-bottom:8px">Real campaign benchmarks</h3>
+  <p class="reveal d1" style="font-size:14px;color:var(--muted);margin-bottom:24px">These are illustrative projections based on observed campaign performance across similar SaaS products.</p>
+  <div class="roi-examples reveal d2">
+    <div class="roi-eg">
+      <div class="roi-eg-badge">SIGNAL PLAN · $800/MO</div>
+      <div class="roi-eg-row"><span>Visitors</span><b>15,000</b></div>
+      <div class="roi-eg-row"><span>3% signup rate</span><b>450 users</b></div>
+      <div class="roi-eg-row"><span>5% paid conversion</span><b>22 customers</b></div>
+      <div class="roi-eg-row"><span>SaaS at $30/mo</span><b>$660 MRR</b></div>
+      <div class="roi-eg-result">2–3 month value: $1.3K–$2K</div>
+      <div class="roi-eg-return">✓ 2–3× return over short window</div>
+    </div>
+    <div class="roi-eg">
+      <div class="roi-eg-badge">VELOCITY PLAN · $1,500/MO</div>
+      <div class="roi-eg-row"><span>Visitors</span><b>40,000</b></div>
+      <div class="roi-eg-row"><span>4% signup rate</span><b>1,600 users</b></div>
+      <div class="roi-eg-row"><span>7% paid conversion</span><b>112 customers</b></div>
+      <div class="roi-eg-row"><span>SaaS at $40/mo</span><b>$4,480 MRR</b></div>
+      <div class="roi-eg-result">3-month value: $13K+</div>
+      <div class="roi-eg-return">✓ 6×+ return potential if product holds</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- CASE STUDY -->
+<section id="clients" style="background:var(--ink);border-radius:48px;margin:32px 16px;padding:100px 64px">
+<div class="case-inner">
+  <div class="case-col-tag" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:.3em" class="reveal">CASE STUDY</div>
+  <h2 style="font-weight:700;font-size:clamp(30px,4vw,54px);color:var(--offwhite);line-height:1.1;margin-bottom:16px" class="reveal">AI Humanizer Tool.<br><span style="font-family:'DM Serif Display',serif;font-style:italic;font-weight:400;color:var(--signal)">B2C SaaS. Pre-launch. Zero budget.</span></h2>
+  <p style="font-size:17px;color:rgba(245,243,238,.48);max-width:560px;line-height:1.6;margin-bottom:56px" class="reveal">A B2C AI writing tool needed signups and brand presence before launch. No product page. No reviews. No paid distribution. Just Reddit.</p>
+  <div class="metrics-grid">
+    <div class="metric-box reveal d1"><div class="metric-val" style="font-family:'Space Mono',monospace">300K+</div><div class="metric-label">Organic impressions</div></div>
+    <div class="metric-box reveal d2"><div class="metric-val" style="font-family:'Space Mono',monospace">10K+</div><div class="metric-label">Site visitors</div></div>
+    <div class="metric-box reveal d3"><div class="metric-val" style="font-family:'Space Mono',monospace">97</div><div class="metric-label">Beta testers in 14 days</div></div>
+    <div class="metric-box reveal d3"><div class="metric-val" style="font-family:'Space Mono',monospace">₹0</div><div class="metric-label">Ad spend</div></div>
+  </div>
+  <div class="case-cols reveal d2">
+    <div class="case-col-l">
+      <div class="case-col-tag">WHAT WE DID</div>
+      <div class="check-row"><span class="check-icon">✓</span><span class="check-text">Mapped 14 high-intent subreddits in the AI tools and writing category</span></div>
+      <div class="check-row"><span class="check-icon">✓</span><span class="check-text">Deployed weekly seeding across r/artificial, r/ChatGPT, r/writing, r/blogging</span></div>
+      <div class="check-row"><span class="check-icon">✓</span><span class="check-text">Built brand presence through founder-voice posts and value-first comment strategy</span></div>
+      <div class="check-row"><span class="check-icon">✓</span><span class="check-text">Generated waitlist mentions indexed directly in Google search results</span></div>
+      <div class="check-row"><span class="check-icon">✓</span><span class="check-text">97 beta testers opted in within 14 days — zero cold outreach required</span></div>
+    </div>
+    <div class="case-col-r">
+      <div class="case-col-tag">THE OUTCOME</div>
+      <p class="quote-text">"Bluespace turned our pre-launch period into a full demand-generation machine."</p>
+      <p class="quote-body">The product launched with community credibility already built, Google-indexed Reddit mentions ranking for product keywords, and a warm audience who had already seen the brand in organic discussions. No cold start. Real velocity from day one.</p>
+      <div class="quote-footer">AI HUMANIZER TOOL · B2C SAAS · PRE-LAUNCH CAMPAIGN · 2024</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--offwhite)">
+<div class="sec-inner">
+  <div class="sec-tag reveal">PRICING</div>
+  <h2 class="sec-h2 reveal d1" style="margin-bottom:8px">Pick your<br><em>growth velocity.</em></h2>
+  <p class="sec-sub reveal d2" style="margin-top:12px;margin-bottom:56px">Guaranteed results or we extend your campaign free. No lock-in contracts.</p>
+  <div class="pricing-grid">
+
+    <div class="price-card price-base reveal d1">
+      <div class="price-badge" style="font-family:'Space Mono',monospace">SIGNAL</div>
+      <div class="price-name">Signal</div>
+      <div class="price-amt" style="font-family:'Space Mono',monospace">$800</div>
+      <div class="price-per">/month</div>
+      <div class="price-guarantee">✓ 500–1,500 users guaranteed</div>
+      <p class="price-desc">For early-stage B2B &amp; B2C SaaS building initial Reddit presence and pre-launch buzz.</p>
+      <div class="price-features">
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">25 posts per campaign</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">25 comment threads</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Subreddit mapping &amp; ICP targeting</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Moderation management</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Monthly performance report</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">500–1,500 users guaranteed</div></div>
+      </div>
+      <a href="#booking" class="price-cta dark">Start Signal ↗</a>
+    </div>
+
+    <div class="price-card price-featured reveal d2">
+      <div class="price-badge" style="font-family:'Space Mono',monospace">★ MOST POPULAR</div>
+      <div class="price-name">Velocity</div>
+      <div class="price-amt" style="font-family:'Space Mono',monospace">$1,500</div>
+      <div class="price-per">/month</div>
+      <div class="price-guarantee">✓ 2,000 users guaranteed</div>
+      <p class="price-desc">For growth-stage SaaS that needs Reddit as a real, measurable acquisition channel.</p>
+      <div class="price-features">
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">40 posts per campaign</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Unlimited comment threads till campaign ends</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Daily seeding cadence</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Competitor mention tracking</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Weekly analytics report</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Dedicated Slack channel</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">2,000 users guaranteed</div></div>
+      </div>
+      <a href="#booking" class="price-cta accent">Start Velocity ↗</a>
+    </div>
+
+    <div class="price-card price-base reveal d3">
+      <div class="price-badge" style="font-family:'Space Mono',monospace">DOMINANCE</div>
+      <div class="price-name">Custom</div>
+      <div class="price-amt" style="font-family:'Space Mono',monospace;font-size:28px;padding-top:8px">Let's talk</div>
+      <div class="price-per">bespoke campaign</div>
+      <div class="price-guarantee">✓ Custom guarantee SLA</div>
+      <p class="price-desc">For funded SaaS teams running big campaigns and needing a full Reddit growth infrastructure.</p>
+      <div class="price-features">
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Unlimited posts &amp; subreddits</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Full-time campaign team</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">AMA coordination</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Reddit Ads + organic hybrid</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Dedicated senior strategist</div></div>
+        <div class="pf-item"><div class="pf-dot"></div><div class="pf-text">Monthly executive review</div></div>
+      </div>
+      <a href="#booking" class="price-cta border">Get Custom Proposal ↗</a>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking" style="background:var(--ink);border-radius:48px;margin:32px 16px;padding:100px 64px">
+<div style="max-width:900px;margin:0 auto">
+  <div class="sec-tag reveal" style="color:var(--signal)">BOOK A CALL</div>
+  <h2 class="sec-h2 reveal d1" style="color:var(--offwhite);margin-bottom:12px">30 minutes.<br><em style="font-family:'DM Serif Display',serif;font-style:italic;font-weight:400;color:var(--signal)">We'll map your Reddit opportunity.</em></h2>
+  <p class="reveal d2" style="font-size:16px;color:rgba(245,243,238,.48);max-width:480px;line-height:1.65;margin-bottom:40px">Bring your ICP, your product, and your current acquisition problem. We'll come with a subreddit map, a campaign hypothesis, and a clear ROI projection.</p>
+  <div class="calendly-frame reveal d3" style="min-height:650px;background:#fff;border-radius:24px;overflow:hidden">
+    <iframe src="https://calendly.com/ss-pvt0701/new-meeting-1" width="100%" height="650" frameborder="0" scrolling="no" style="border:none;display:block"></iframe>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">BLUE<span>SPACE</span></div>
+        <p class="footer-tagline">Reddit organic growth campaigns for B2B and B2C SaaS. Real communities. Real intent. Zero ad spend.</p>
+        <div class="status-row">
+          <div class="status-dot"></div>
+          <span class="status-label">SYSTEM OPERATIONAL</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head">SERVICES</div>
+        <div class="footer-links">
+          <a href="#process">Reddit Growth Campaigns</a>
+          <a href="#how">Subreddit Mapping</a>
+          <a href="#how">Community Seeding</a>
+          <a href="#roi">Campaign Analytics</a>
+          <a href="#clients">Case Studies</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head">COMPANY</div>
+        <div class="footer-links">
+          <a href="#how">How It Works</a>
+          <a href="#roi">ROI Calculator</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#booking">Book a Call</a>
+          <a href="mailto:hello@bluespace.agency">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 BLUESPACE · ALL RIGHTS RESERVED</span>
+      <span class="footer-copy">BUILT FOR B2B &amp; B2C SAAS · POWERED BY ORGANIC REACH</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// TICKER
+const tItems=['REDDIT GROWTH ENGINE','B2B SAAS GROWTH','B2C SAAS GROWTH','ZERO AD SPEND','ORGANIC REACH','PRE-QUALIFIED TRAFFIC','300K+ IMPRESSIONS','100K+ TRAFFIC DELIVERED','COMMUNITY-FIRST GTM','NO BOTS NO SPAM'];
+const track=document.getElementById('ticker');
+const html=[...tItems,...tItems].map(t=>`<span class="ticker-item">${t}</span>`).join('');
+track.innerHTML=html+html;
+
+// NAV SCROLL
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>80)},{passive:true});
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// SHUFFLER
+const sData=[
+  {label:'B2B SaaS Launch',sub:'Seeding r/SaaS, r/startups, r/entrepreneur',bg:'#E63B2E',tc:'#fff'},
+  {label:'B2C Tool Drop',sub:'Pre-launch buzz in r/artificial, r/ChatGPT',bg:'#111',tc:'#F5F3EE'},
+  {label:'Product Hunt Warmup',sub:'Community priming across niche subs',bg:'#2A2A2A',tc:'#F5F3EE'},
+];
+let sState=[...sData];
+const shuffler=document.getElementById('shuffler');
+function renderShuffler(){
+  shuffler.innerHTML='';
+  sState.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='shuffle-card';
+    el.style.cssText=`background:${c.bg};top:${i*11}px;z-index:${3-i};opacity:${i===0?1:i===1?.65:.4};transform:scale(${1-i*.035})`;
+    el.innerHTML=`<div style="font-weight:700;font-size:14px;color:${c.tc}">${c.label}</div>${i===0?`<div style="font-family:'Space Mono',monospace;font-size:11px;margin-top:4px;color:${c.tc};opacity:.7">${c.sub}</div>`:''}`;
+    shuffler.appendChild(el);
+  });
+}
+renderShuffler();
+setInterval(()=>{sState.unshift(sState.pop());renderShuffler();},2800);
+
+// TYPEWRITER
+const twLines=[
+  '> Mapping r/SaaS for ICP threads...',
+  '> Found 847 high-intent posts this week',
+  '> Seeding contextual brand mentions...',
+  '> Impressions this cycle: 18,440',
+  '> Engagement rate: 4.2% (avg 0.8%)',
+  '> Sentiment: 94% positive mentions',
+  '> Signups attributed: 127 this week',
+  '> Zero ad spend. Pure organic reach.',
+];
+let twLine=0,twChar=0,twDisp='',twLog=[];
+const twLogEl=document.getElementById('tw-log');
+function twTick(){
+  const line=twLines[twLine];
+  if(twChar<line.length){
+    twDisp+=line[twChar++];
+    const cur=document.getElementById('tw-cur');
+    if(cur) cur.innerHTML=`<span style="color:var(--signal)">${twDisp}</span><span class="cursor" style="color:var(--signal)">█</span>`;
+    setTimeout(twTick,28);
+  } else {
+    setTimeout(()=>{
+      twLog.push(twDisp);
+      if(twLog.length>5)twLog.shift();
+      const olds=twLog.slice(0,-1).map(l=>`<div style="color:#444;line-height:1.8">${l}</div>`).join('');
+      const last=`<div style="color:#666;line-height:1.8">${twLog[twLog.length-1]}</div>`;
+      twLogEl.innerHTML=olds+last+`<div id="tw-cur" style="line-height:1.8"><span class="cursor" style="color:var(--signal)">█</span></div>`;
+      twDisp='';twChar=0;twLine=(twLine+1)%twLines.length;
+      setTimeout(twTick,400);
+    },900);
+  }
+}
+twTick();
+
+// SCHEDULER
+let activeDay=-1;
+function animateDays(){
+  const next=(activeDay+1)%7;
+  setTimeout(()=>{
+    activeDay=next;
+    document.querySelectorAll('.day-cell').forEach((el,i)=>el.classList.toggle('active',i===activeDay));
+    setTimeout(animateDays,1100);
+  },300);
+}
+setTimeout(animateDays,800);
+
+// SCAN DOTS
+const scanDots=document.getElementById('scan-dots');
+if(scanDots){
+  let h='';
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const fill=Math.random()>.55?'var(--signal)':'var(--paper)';
+    const op=(.25+Math.random()*.4).toFixed(2);
+    h+=`<rect x="${c*22+8}" y="${r*22+8}" width="14" height="14" rx="3" fill="${fill}" opacity="${op}"/>`;
+  }
+  scanDots.innerHTML=h;
+}
+
+// ROI CALCULATOR
+function fmt(n){return n>=1000?n.toLocaleString():n}
+function calcROI(){
+  const visitors=+document.getElementById('sl-visitors').value;
+  const signupPct=+document.getElementById('sl-signup').value;
+  const paidPct=+document.getElementById('sl-paid').value;
+  const rev=+document.getElementById('sl-rev').value;
+  const cost=+document.getElementById('sl-cost').value;
+  const signups=Math.round(visitors*signupPct/100);
+  const customers=Math.round(signups*paidPct/100);
+  const mrr=customers*rev;
+  const val3=mrr*3;
+  const cost3=cost*3;
+  const mult=(val3/cost3);
+  document.getElementById('v-visitors').textContent=fmt(visitors);
+  document.getElementById('v-signup').textContent=signupPct+'%';
+  document.getElementById('v-paid').textContent=paidPct+'%';
+  document.getElementById('v-rev').textContent='$'+rev;
+  document.getElementById('v-cost').textContent='$'+fmt(cost);
+  document.getElementById('o-signups').textContent=fmt(signups);
+  document.getElementById('o-customers').textContent=fmt(customers);
+  document.getElementById('o-mrr').textContent='$'+fmt(mrr);
+  document.getElementById('o-3mo').textContent='$'+fmt(val3);
+  document.getElementById('o-cost3').textContent='$'+fmt(cost3);
+  document.getElementById('o-mult').textContent=mult.toFixed(1)+'×';
+}
+calcROI();
+</script>
+</body>
+</html>
